@@ -5,6 +5,7 @@ public class GameLogicImpl implements GameLogic {
 	private GameState state;
 	private Gamefield gamefield;
 	private Token currentToken; 
+	private Token winner;
 	
 	public final int WIDTH = 7;
 	public final int HEIGHT = 6;
@@ -14,6 +15,7 @@ public class GameLogicImpl implements GameLogic {
 		state = GameState.INITIALIZED;
 		gamefield = new Gamefield(WIDTH,HEIGHT);
 		currentToken = Token.Red; //red begins
+		winner = Token.None;
 	}
 	
 	@Override
@@ -29,7 +31,17 @@ public class GameLogicImpl implements GameLogic {
 	@Override
 	public void placeToken(int row) throws IllegalStateException {
 		gamefield.placeToken(row, currentToken);
+		checkWinner(currentToken);
 		changeToken();
+	}
+	
+	private void checkWinner(Token currentToken)
+	{
+		if (gamefield.checkWinner(currentToken))
+		{
+			state = GameState.FINISHED;
+			winner = currentToken;
+		}
 	}
 
 	@Override
@@ -39,8 +51,7 @@ public class GameLogicImpl implements GameLogic {
 
 	@Override
 	public Token getWinner() {
-		// TODO Auto-generated method stub
-		return null;
+		return winner; 
 	}
 	
 	private void changeToken()

@@ -106,11 +106,12 @@ public class GameLogicTest {
 	public void winnerDiagonalTest()
 	{
 		//      x
-		//    x o
+		//  o x o
 		//  x o x
 		//x o x o
 		
 		logic.placeToken(0);
+		logic.placeToken(1);
 		logic.placeToken(1);
 		logic.placeToken(1);
 		logic.placeToken(2);
