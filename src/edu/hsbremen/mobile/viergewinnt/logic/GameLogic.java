@@ -6,7 +6,7 @@ public interface GameLogic {
 	
 	GameState getGameState();
 	
-	void placeToken(int row);
+	void placeToken(int row) throws IllegalStateException;
 	
 	Token[][] getGamefield();
 	

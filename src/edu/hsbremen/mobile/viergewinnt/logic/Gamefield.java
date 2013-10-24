@@ -42,7 +42,7 @@ public class Gamefield {
 	 * @param token the Token that has to be placed.
 	 * @return
 	 */
-	public void placeToken(int row, Token token)
+	public void placeToken(int row, Token token) throws IllegalStateException
 	{
 		int height = getRowHeight(row);
 		field[row][height] = token;
@@ -53,7 +53,7 @@ public class Gamefield {
 	 * @param row
 	 * @return
 	 */
-	private int getRowHeight(int row)
+	private int getRowHeight(int row) throws IllegalStateException
 	{
 		int height = -1;
 		Token currentToken;
@@ -61,6 +61,10 @@ public class Gamefield {
 		do 
 		{
 			height++;
+			
+			if (height >= field[row].length)
+				throw new IllegalStateException("Row " + row + " is full.");
+			
 			currentToken = field[row][height];
 		}
 		while (!currentToken.equals(Token.None));

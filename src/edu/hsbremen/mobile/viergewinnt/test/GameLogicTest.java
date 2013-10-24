@@ -126,7 +126,7 @@ public class GameLogicTest {
 	
 	public void assertWinner(Token winner)
 	{
-		assertEquals(logic.getGameState(),GameState.FINISHED);
 		assertEquals(logic.getWinner(),winner);
+		assertEquals(logic.getGameState(),GameState.FINISHED);
 	}
 }

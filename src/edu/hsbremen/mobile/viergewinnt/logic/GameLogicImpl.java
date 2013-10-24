@@ -27,7 +27,7 @@ public class GameLogicImpl implements GameLogic {
 	}
 
 	@Override
-	public void placeToken(int row) {
+	public void placeToken(int row) throws IllegalStateException {
 		gamefield.placeToken(row, currentToken);
 		changeToken();
 	}
