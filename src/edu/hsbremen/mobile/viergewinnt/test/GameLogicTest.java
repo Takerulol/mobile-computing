@@ -7,21 +7,126 @@ import org.junit.Test;
 
 import edu.hsbremen.mobile.viergewinnt.logic.GameLogic;
 import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
+import edu.hsbremen.mobile.viergewinnt.logic.GameState;
+import edu.hsbremen.mobile.viergewinnt.logic.Token;
 
 public class GameLogicTest {
 
 	private GameLogic logic;
 	
 	@Before
-	public void Setup()
+	public void setup()
 	{
 		logic = new GameLogicImpl(); 
-		logic.startGame();		
+		logic.startGame();	
 	}
 	
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void gameStateTest() {
+		GameLogic gamelogic = new GameLogicImpl();
+		assertEquals(gamelogic.getGameState(), GameState.INITIALIZED);
+		
+		gamelogic.startGame();
+		assertEquals(gamelogic.getGameState(), GameState.RUNNING);
 	}
-
+	
+	@Test
+	public void placeTokenTest()
+	{
+		logic.placeToken(1);
+		Token token = logic.getGamefield()[1][0];
+		assertEquals(token,Token.Red);
+	}
+	
+	@Test
+	public void stackTokensTest()
+	{
+		logic.placeToken(0);
+		logic.placeToken(0);
+		Token token = logic.getGamefield()[0][1];
+		assertEquals(token,Token.Blue);
+	}
+	
+	@Test
+	public void rowFullTest()
+	{
+		for (int i = 0; i < logic.getGamefield()[0].length; i++)
+		{
+			logic.placeToken(0);
+		}
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void rowFullExceptionTest()
+	{
+		for (int i = 0; i <= logic.getGamefield()[0].length; i++)
+		{
+			logic.placeToken(0);
+		}
+	}
+	
+	@Test
+	public void winnerHorizontalTest()
+	{
+		//o o o
+		//x x x x
+		
+		logic.placeToken(0);
+		logic.placeToken(0);
+		logic.placeToken(1);
+		logic.placeToken(1);
+		logic.placeToken(2);
+		logic.placeToken(2);
+		logic.placeToken(3);
+		
+		assertWinner(Token.Red);
+	}
+	
+	@Test
+	public void winnerVerticalTest()
+	{
+		//o
+		//o x
+		//o x
+		//o x x
+		
+		logic.placeToken(1);
+		logic.placeToken(0);
+		logic.placeToken(1);
+		logic.placeToken(0);
+		logic.placeToken(1);
+		logic.placeToken(0);
+		logic.placeToken(2);
+		logic.placeToken(0);
+		
+		assertWinner(Token.Blue);
+	}
+	
+	@Test
+	public void winnerDiagonalTest()
+	{
+		//      x
+		//    x o
+		//  x o x
+		//x o x o
+		
+		logic.placeToken(0);
+		logic.placeToken(1);
+		logic.placeToken(1);
+		logic.placeToken(2);
+		logic.placeToken(2);
+		logic.placeToken(2);
+		logic.placeToken(3);
+		logic.placeToken(3);
+		logic.placeToken(3);
+		logic.placeToken(3);
+		
+		assertWinner(Token.Red);
+	}
+	
+	public void assertWinner(Token winner)
+	{
+		assertEquals(logic.getGameState(),GameState.FINISHED);
+		assertEquals(logic.getWinner(),winner);
+	}
 }
