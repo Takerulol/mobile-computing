@@ -134,6 +134,73 @@ public class GameLogicTest {
 		assertWinner(Token.Red);
 	}
 	
+	@Test
+	public void gamefieldFullTest()
+	{
+		// o o o x o o x
+		// x x x o x x o
+		// o o o x o o x
+		// x x x o x x o 
+		// o o o x o o x
+		// x x x o x x o
+
+		logic.placeToken(0);
+		logic.placeToken(0);
+		logic.placeToken(0);
+		logic.placeToken(0);
+		logic.placeToken(0);
+		logic.placeToken(0);
+		
+		logic.placeToken(1);
+		logic.placeToken(1);
+		logic.placeToken(1);
+		logic.placeToken(1);
+		logic.placeToken(1);
+		logic.placeToken(1);
+		
+		logic.placeToken(4);
+		logic.placeToken(4);
+		logic.placeToken(4);
+		logic.placeToken(4);
+		logic.placeToken(4);
+		logic.placeToken(4);
+		
+		logic.placeToken(5);
+		logic.placeToken(5);
+		logic.placeToken(5);
+		logic.placeToken(5);
+		logic.placeToken(5);
+		logic.placeToken(5);
+		
+		logic.placeToken(2);
+		logic.placeToken(3);
+		logic.placeToken(3);
+		logic.placeToken(2);
+		logic.placeToken(2);
+		logic.placeToken(3);
+		
+		logic.placeToken(3);
+		logic.placeToken(2);
+		logic.placeToken(2);
+		logic.placeToken(3);
+		logic.placeToken(3);
+		logic.placeToken(2);
+		
+		logic.placeToken(6);
+		logic.placeToken(6);
+		logic.placeToken(6);
+		logic.placeToken(6);
+		logic.placeToken(6);
+		
+		assertNoWinner();
+		
+		logic.placeToken(6);
+
+		assertEquals(logic.getGameState(), GameState.FINISHED);
+		assertEquals(logic.getWinner(), Token.None);
+		
+	}
+	
 	public void assertNoWinner()
 	{
 		assertEquals(logic.getWinner(), Token.None);

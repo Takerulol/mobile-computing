@@ -34,6 +34,7 @@ public class GameLogicImpl implements GameLogic {
 		{
 			gamefield.placeToken(row, currentToken);
 			checkWinner(currentToken);
+			checkFull();
 			changeToken();
 		}
 		else
@@ -48,6 +49,19 @@ public class GameLogicImpl implements GameLogic {
 		{
 			state = GameState.FINISHED;
 			winner = currentToken;
+		}
+	}
+	
+	/**
+	 * Checks whether or not the gamefield is full.
+	 * Changes gamestate to FINISHED if full.
+	 */
+	private void checkFull()
+	{
+		if (gamefield.checkFull() 
+				&& state.equals(GameState.RUNNING))
+		{
+			state = GameState.FINISHED;
 		}
 	}
 

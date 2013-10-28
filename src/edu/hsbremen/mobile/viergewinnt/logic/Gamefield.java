@@ -158,5 +158,28 @@ public class Gamefield {
 		int amount = 1 + countTokens(token, x, y, dx, dy);
 		return amount;
 	}
+
+	public boolean checkFull() {
+		
+		boolean full = true;
+		
+		for (int x = 0; x < field.length; x++)
+		{
+			for (int y = 0; y < field[0].length; y++)
+			{
+				Token token = field[x][y];
+				if (token.equals(Token.None))
+				{
+					full = false;
+					break;
+				}
+			}
+			
+			if (!full) //break x loop if an empty slot has been found
+				break;
+		}
+		
+		return full;
+	}
 	
 }
