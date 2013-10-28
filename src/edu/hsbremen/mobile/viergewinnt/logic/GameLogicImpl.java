@@ -30,9 +30,17 @@ public class GameLogicImpl implements GameLogic {
 
 	@Override
 	public void placeToken(int row) throws IllegalStateException {
-		gamefield.placeToken(row, currentToken);
-		checkWinner(currentToken);
-		changeToken();
+		if (state.equals(GameState.RUNNING))
+		{
+			gamefield.placeToken(row, currentToken);
+			checkWinner(currentToken);
+			checkFull();
+			changeToken();
+		}
+		else
+		{
+			throw new IllegalStateException("The game is not running.");
+		}
 	}
 	
 	private void checkWinner(Token currentToken)
@@ -41,6 +49,19 @@ public class GameLogicImpl implements GameLogic {
 		{
 			state = GameState.FINISHED;
 			winner = currentToken;
+		}
+	}
+	
+	/**
+	 * Checks whether or not the gamefield is full.
+	 * Changes gamestate to FINISHED if full.
+	 */
+	private void checkFull()
+	{
+		if (gamefield.checkFull() 
+				&& state.equals(GameState.RUNNING))
+		{
+			state = GameState.FINISHED;
 		}
 	}
 
