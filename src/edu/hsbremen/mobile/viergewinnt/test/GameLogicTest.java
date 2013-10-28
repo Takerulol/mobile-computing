@@ -77,6 +77,9 @@ public class GameLogicTest {
 		logic.placeToken(1);
 		logic.placeToken(2);
 		logic.placeToken(2);
+		
+		assertNoWinner();
+		
 		logic.placeToken(3);
 		
 		assertWinner(Token.Red);
@@ -97,6 +100,9 @@ public class GameLogicTest {
 		logic.placeToken(1);
 		logic.placeToken(0);
 		logic.placeToken(2);
+		
+		assertNoWinner();
+		
 		logic.placeToken(0);
 		
 		assertWinner(Token.Blue);
@@ -120,9 +126,18 @@ public class GameLogicTest {
 		logic.placeToken(3);
 		logic.placeToken(3);
 		logic.placeToken(3);
+		
+		assertNoWinner();
+		
 		logic.placeToken(3);
 		
 		assertWinner(Token.Red);
+	}
+	
+	public void assertNoWinner()
+	{
+		assertEquals(logic.getWinner(), Token.None);
+		assertEquals(logic.getGameState(),GameState.RUNNING);
 	}
 	
 	public void assertWinner(Token winner)
