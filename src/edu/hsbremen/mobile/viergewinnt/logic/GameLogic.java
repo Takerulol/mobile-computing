@@ -19,7 +19,8 @@ public interface GameLogic {
 	 * Changes automatically between the red and blue token after each turn.
 	 * Starts with the red token.
 	 * 
-	 * Throws an IllegalStateException when the row is already filled up.
+	 * Throws an IllegalStateException when the row is already filled up,
+	 * or the game is not in RUNNING state.
 	 * @param row The row in which the token should be placed.
 	 * @throws IllegalStateException
 	 */

@@ -30,9 +30,16 @@ public class GameLogicImpl implements GameLogic {
 
 	@Override
 	public void placeToken(int row) throws IllegalStateException {
-		gamefield.placeToken(row, currentToken);
-		checkWinner(currentToken);
-		changeToken();
+		if (state.equals(GameState.RUNNING))
+		{
+			gamefield.placeToken(row, currentToken);
+			checkWinner(currentToken);
+			changeToken();
+		}
+		else
+		{
+			throw new IllegalStateException("The game is not running.");
+		}
 	}
 	
 	private void checkWinner(Token currentToken)
