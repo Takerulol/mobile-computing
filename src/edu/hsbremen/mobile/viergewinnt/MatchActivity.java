@@ -1,21 +1,31 @@
 package edu.hsbremen.mobile.viergewinnt;
 
+import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableLayout.LayoutParams;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.os.Build;
 
 public class MatchActivity extends Activity {
 
+	ImageView[][] tokenList = null;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		generateField();
 	}
 
 	/**
@@ -52,4 +62,17 @@ public class MatchActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void generateField() {
+		tokenList = new ImageView[7][6];
+		
+		TableLayout layout = new TableLayout(this);
+		TableLayout.LayoutParams params = new TableLayout.LayoutParams(
+				ViewGroup.LayoutParams.MATCH_PARENT, 
+				ViewGroup.LayoutParams.MATCH_PARENT);
+		layout.setLayoutParams(params);
+		layout.setStretchAllColumns(true);
+		layout.setBackgroundColor(getResources().getColor(R.color.black_overlay));
+		
+		
+	}
 }
