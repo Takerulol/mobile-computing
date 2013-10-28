@@ -1,10 +1,13 @@
 package edu.hsbremen.mobile.viergewinnt;
 
+import edu.hsbremen.mobile.viergewinnt.logic.GameLogic;
 import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
+import edu.hsbremen.mobile.viergewinnt.logic.Token;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -16,6 +19,8 @@ import android.os.Build;
 public class MatchActivity extends Activity {
 
 	ImageView[][] tokenList = null;
+	GameLogic logic;
+	private boolean init = true;
 	
 	
 	@Override
@@ -25,7 +30,38 @@ public class MatchActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
+		if(init ) init();
+	}
+
+	private void init() {
+		init = false;
+		logic = new GameLogicImpl();
+		logic.startGame();
+		tokenList = new ImageView[GameLogicImpl.WIDTH][GameLogicImpl.HEIGHT];
 		generateField();
+		updateField();
+	}
+
+	private void updateField() {
+		Token[][] tokens = logic.getGamefield();
+		for(int x = 0; x < tokens.length; x++) {
+			for(int y = 0; y < tokens[0].length; y++) {
+				setImage(x,y,tokens[x][y]);
+			}
+		}
+		
+	}
+
+	private void setImage(int x, int y, Token token) {
+		
+		switch(token) {
+		case Blue:
+			
+			break;
+		case Red:
+			break;
+		case None:
+		}
 	}
 
 	/**
@@ -63,8 +99,6 @@ public class MatchActivity extends Activity {
 	}
 
 	public void generateField() {
-		tokenList = new ImageView[7][6];
-		
 		TableLayout layout = new TableLayout(this);
 		TableLayout.LayoutParams params = new TableLayout.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT, 
@@ -73,6 +107,18 @@ public class MatchActivity extends Activity {
 		layout.setStretchAllColumns(true);
 		layout.setBackgroundColor(getResources().getColor(R.color.black_overlay));
 		
+		for(int y = 0; y < GameLogicImpl.HEIGHT; y++) {
+			
+		}
+	}
+	
+	public void addRow(TableLayout layout, int rowNum) {
+		for(int x = 0; x < GameLogicImpl.WIDTH; x++) {
+			
+		}
+	}
+	
+	public void buttonClick(View view) {
 		
 	}
 }
