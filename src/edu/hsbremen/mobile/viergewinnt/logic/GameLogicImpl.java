@@ -7,8 +7,8 @@ public class GameLogicImpl implements GameLogic {
 	private Token currentToken; 
 	private Token winner;
 	
-	public final int WIDTH = 7;
-	public final int HEIGHT = 6;
+	static public final int WIDTH = 7;
+	static public final int HEIGHT = 6;
 	
 	public GameLogicImpl()
 	{
