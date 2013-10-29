@@ -89,4 +89,9 @@ public class GameLogicImpl implements GameLogic {
 			currentToken = Token.Red;
 	}
 
+	@Override
+	public Gamefield getGamefieldClass() {
+		return gamefield;
+	}
+
 }

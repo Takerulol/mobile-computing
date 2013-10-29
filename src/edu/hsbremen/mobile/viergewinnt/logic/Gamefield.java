@@ -81,16 +81,21 @@ public class Gamefield {
 	
 	public boolean checkWinner(Token lastToken)
 	{
+		return checkWinner(lastToken,WINNING_NUMBER);
+	}
+	
+	public boolean checkWinner(Token lastToken, int winningNumber)
+	{
 		int x = lastMove;
 		int y = getRowHeight(x) -1;
 		
-		if (checkVertical(lastToken,x,y) >= WINNING_NUMBER)
+		if (checkVertical(lastToken,x,y) >= winningNumber)
 			return true;
-		else if (checkHorizontal(lastToken,x,y) >= WINNING_NUMBER)
+		else if (checkHorizontal(lastToken,x,y) >= winningNumber)
 			return true;
-		else if (checkDiagonalRight(lastToken,x,y) >= WINNING_NUMBER)
+		else if (checkDiagonalRight(lastToken,x,y) >= winningNumber)
 			return true;
-		else if (checkDiagonalLeft(lastToken,x,y) >= WINNING_NUMBER)
+		else if (checkDiagonalLeft(lastToken,x,y) >= winningNumber)
 			return true;
 		else
 			return false;

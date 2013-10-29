@@ -10,6 +10,8 @@ public class AchievementProxy implements GameLogic {
 	private GameLogic logic;
 	private AchievementLogic al;
 	
+	private final Token PLAYER = Token.Red;
+	
 	public AchievementProxy(GameLogic logic, AchievementLogic al)
 	{
 		this.logic = logic;
@@ -29,6 +31,20 @@ public class AchievementProxy implements GameLogic {
 	@Override
 	public void placeToken(int row) throws IllegalStateException {
 		logic.placeToken(row);
+		
+		//check winner & four wins achievement
+		if (getGameState().equals(GameState.FINISHED) && 
+				getWinner().equals(PLAYER))
+		{
+			al.unlockAchievement(Achievement.WINNER);
+			al.unlockAchievement(Achievement.FOUR_WINS);
+			
+			//check six in a row achievement
+			if (logic.getGamefieldClass().checkWinner(PLAYER, 6))
+			{
+				al.unlockAchievement(Achievement.SIX_IN_A_ROW);
+			}
+		}
 	}
 
 	@Override
@@ -39,6 +55,11 @@ public class AchievementProxy implements GameLogic {
 	@Override
 	public Token getWinner() {
 		return logic.getWinner();
+	}
+
+	@Override
+	public Gamefield getGamefieldClass() {
+		return getGamefieldClass();
 	}
 
 }
