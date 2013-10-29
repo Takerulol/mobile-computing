@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import edu.hsbremen.mobile.viergewinnt.logic.Achievement;
 import edu.hsbremen.mobile.viergewinnt.logic.AchievementLogic;
+import edu.hsbremen.mobile.viergewinnt.logic.AchievementProxy;
 import edu.hsbremen.mobile.viergewinnt.logic.GameLogic;
 import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
 import edu.hsbremen.mobile.viergewinnt.logic.GameState;
@@ -20,7 +21,9 @@ private AchievementLogic al;
 	@Before
 	public void setup()
 	{
-		
+		al = new AchievementLogicMock();
+		logic = new AchievementProxy(new GameLogicImpl(), al);
+		logic.startGame();
 	}
 	
 	@Test

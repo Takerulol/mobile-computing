@@ -13,14 +13,20 @@ public class GameLogicImpl implements GameLogic {
 	public GameLogicImpl()
 	{
 		state = GameState.INITIALIZED;
-		gamefield = new Gamefield(WIDTH,HEIGHT);
-		currentToken = Token.Red; //red begins
-		winner = Token.None;
+		resetGamefield();
 	}
 	
 	@Override
 	public void startGame() {
+		resetGamefield();
 		state = GameState.RUNNING;
+	}
+	
+	private void resetGamefield()
+	{
+		gamefield = new Gamefield(WIDTH,HEIGHT);
+		currentToken = Token.Red; //red begins
+		winner = Token.None;
 	}
 
 	@Override

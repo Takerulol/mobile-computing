@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.hsbremen.mobile.viergewinnt.logic.AchievementLogic;
+import edu.hsbremen.mobile.viergewinnt.logic.AchievementProxy;
 import edu.hsbremen.mobile.viergewinnt.logic.GameLogic;
 import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
 import edu.hsbremen.mobile.viergewinnt.logic.GameState;
@@ -17,7 +19,10 @@ public class GameLogicTest {
 	@Before
 	public void setup()
 	{
-		logic = new GameLogicImpl(); 
+		//logic = new GameLogicImpl(); 
+		
+		AchievementLogic al = new AchievementLogicMock();
+		logic = new AchievementProxy(new GameLogicImpl(), al);
 		logic.startGame();	
 	}
 	
