@@ -9,9 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
-import android.widget.TableLayout.LayoutParams;
+import android.widget.TableRow;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -21,7 +23,7 @@ public class MatchActivity extends Activity {
 	ImageView[][] tokenList = null;
 	GameLogic logic;
 	private boolean init = true;
-	
+	private Button[] buttons = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class MatchActivity extends Activity {
 		logic = new GameLogicImpl();
 		logic.startGame();
 		tokenList = new ImageView[GameLogicImpl.WIDTH][GameLogicImpl.HEIGHT];
+		buttons = new Button[GameLogicImpl.WIDTH];
 		generateField();
 		updateField();
 	}
@@ -56,11 +59,13 @@ public class MatchActivity extends Activity {
 		
 		switch(token) {
 		case Blue:
-			
+			tokenList[x][y].setImageResource(R.drawable.blue);
 			break;
 		case Red:
+			tokenList[x][y].setImageResource(R.drawable.red);
 			break;
 		case None:
+			tokenList[x][y].setImageResource(R.drawable.none);
 		}
 	}
 
@@ -99,26 +104,53 @@ public class MatchActivity extends Activity {
 	}
 
 	public void generateField() {
-		TableLayout layout = new TableLayout(this);
-		TableLayout.LayoutParams params = new TableLayout.LayoutParams(
-				ViewGroup.LayoutParams.MATCH_PARENT, 
-				ViewGroup.LayoutParams.MATCH_PARENT);
-		layout.setLayoutParams(params);
+		TableLayout layout = (TableLayout)this.findViewById(R.id.content);
+//		TableLayout.LayoutParams params = new TableLayout.LayoutParams(
+//				ViewGroup.LayoutParams.MATCH_PARENT, 
+//				ViewGroup.LayoutParams.MATCH_PARENT);
+//		layout.setLayoutParams(params);
+//		layout.setStretchAllColumns(true);
+//		layout.setBackgroundColor(getResources().getColor(R.color.black_overlay));
+//		
+		createRows(layout);
 		layout.setStretchAllColumns(true);
-		layout.setBackgroundColor(getResources().getColor(R.color.black_overlay));
-		
-		for(int y = 0; y < GameLogicImpl.HEIGHT; y++) {
-			
-		}
 	}
 	
-	public void addRow(TableLayout layout, int rowNum) {
-		for(int x = 0; x < GameLogicImpl.WIDTH; x++) {
-			
+	public void createRows(TableLayout tableLayout) {
+		TableRow row = new TableRow(this);
+		for(int i = 0; i < GameLogicImpl.WIDTH;i++){
+			final int k = i;
+			Button button = new Button(this);
+			button.setText(R.string.put);
+			button.setOnClickListener(new View.OnClickListener() {
+				private int buttonNumber = k;
+				@Override
+				public void onClick(View v) {
+//					MatchActivity.this.buttonClick(v);
+					logic.placeToken(buttonNumber);
+					updateField();
+				}
+			});
+			row.addView(button);
+		}
+		tableLayout.addView(row);
+		for(int y = GameLogicImpl.HEIGHT; y > 0; y--) {
+			row = new TableRow(this);
+			for(int x = 0; x < GameLogicImpl.WIDTH; x++) {
+				this.tokenList[x][y-1] = new ImageView(this);
+				row.addView(this.tokenList[x][y-1]);
+			}
+			tableLayout.addView(row);
 		}
 	}
 	
 	public void buttonClick(View view) {
-		
+		for(int i = 0; i < buttons.length;i++) {
+			if(view.getId() == buttons[i].getId()) {
+				logic.placeToken(i);
+				updateField();
+				break;
+			}
+		}
 	}
 }
