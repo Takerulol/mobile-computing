@@ -44,6 +44,19 @@ public class AchievementProxy implements GameLogic {
 			{
 				al.unlockAchievement(Achievement.SIX_IN_A_ROW);
 			}
+			
+			//check multikill achievement
+			if (logic.getGamefieldClass().checkWinningRows(PLAYER) >= 2)
+			{
+				al.unlockAchievement(Achievement.MULTIKILL);
+			}
+		}
+		
+		//check tie 
+		else if (getGameState().equals(GameState.FINISHED) && 
+				getWinner().equals(Token.None))
+		{
+			al.unlockAchievement(Achievement.TIE);
 		}
 	}
 
