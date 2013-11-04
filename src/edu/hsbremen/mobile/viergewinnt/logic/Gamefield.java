@@ -81,19 +81,42 @@ public class Gamefield {
 	
 	public boolean checkWinner(Token lastToken)
 	{
+		return checkWinner(lastToken,WINNING_NUMBER);
+	}
+	
+	public boolean checkWinner(Token lastToken, int winningNumber)
+	{
+		return (checkWinningRows(lastToken,winningNumber) >= 1);
+	}
+	
+	public int checkWinningRows(Token lastToken) {
+		return checkWinningRows(lastToken, WINNING_NUMBER);
+	}
+	
+	/**
+	 * Checks in how much directions a winning row was achieved. 
+	 * Important for achievement calculation.
+	 * @param lastToken
+	 * @param winningNumber
+	 * @return
+	 */
+	public int checkWinningRows(Token lastToken, int winningNumber)
+	{
 		int x = lastMove;
 		int y = getRowHeight(x) -1;
 		
-		if (checkVertical(lastToken,x,y) >= WINNING_NUMBER)
-			return true;
-		else if (checkHorizontal(lastToken,x,y) >= WINNING_NUMBER)
-			return true;
-		else if (checkDiagonalRight(lastToken,x,y) >= WINNING_NUMBER)
-			return true;
-		else if (checkDiagonalLeft(lastToken,x,y) >= WINNING_NUMBER)
-			return true;
-		else
-			return false;
+		int rows = 0; 
+		
+		if (checkVertical(lastToken,x,y) >= winningNumber)
+			rows++;
+		if (checkHorizontal(lastToken,x,y) >= winningNumber)
+			rows++;
+		if (checkDiagonalRight(lastToken,x,y) >= winningNumber)
+			rows++;
+		if (checkDiagonalLeft(lastToken,x,y) >= winningNumber)
+			rows++;
+		
+		return rows;
 	}
 	
 	private int checkVertical(Token token, int x, int y)
@@ -181,5 +204,7 @@ public class Gamefield {
 		
 		return full;
 	}
+
+	
 	
 }

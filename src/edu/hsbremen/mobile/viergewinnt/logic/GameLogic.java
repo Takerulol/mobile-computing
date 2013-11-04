@@ -40,4 +40,10 @@ public interface GameLogic {
 	 */
 	Token getWinner();
 	
+	/**
+	 * Returns the gamefield as a Gamefield class.
+	 * @return
+	 */
+	Gamefield getGamefieldClass();
+	
 }
