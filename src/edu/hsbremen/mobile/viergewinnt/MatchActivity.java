@@ -31,13 +31,12 @@ public class MatchActivity extends Activity {
 		setContentView(R.layout.activity_match);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
 		if(init ) init();
 	}
 
 	private void init() {
 		init = false;
-		logic = new GameLogicImpl();
+		GameLogic gameLogic = new GameLogicImpl();
 		logic.startGame();
 		tokenList = new ImageView[GameLogicImpl.WIDTH][GameLogicImpl.HEIGHT];
 		buttons = new Button[GameLogicImpl.WIDTH];

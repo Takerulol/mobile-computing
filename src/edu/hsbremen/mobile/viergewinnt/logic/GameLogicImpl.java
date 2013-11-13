@@ -4,7 +4,7 @@ public class GameLogicImpl implements GameLogic {
 
 	private GameState state;
 	private Gamefield gamefield;
-	private Token currentToken; 
+	protected Token currentToken; 
 	private Token winner;
 	
 	static public final int WIDTH = 7;

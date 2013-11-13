@@ -1,0 +1,82 @@
+package edu.hsbremen.mobile.viergewinnt.googleplay;
+
+import java.nio.ByteBuffer;
+
+import com.google.android.gms.games.GamesClient;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
+
+/**
+ * Sends and receives packages to/from all participants.
+ * To receive packages, the class needs to be set as a listener in the RoomConfig.
+ * --> RoomConfig.Builder.setMessageReceivedListener() 
+ * @author Thorsten
+ *
+ */
+public class NetworkManager implements RealTimeMessageReceivedListener {
+	
+	GamesClient client;
+	String roomId;
+	String participantId;
+	
+	public NetworkManager(GamesClient client, String roomId, String participantId)
+	{
+		this.client = client;
+		this.roomId = roomId;
+		this.participantId = participantId;
+	}
+	
+	/**
+	 * Possible network header 
+	 */
+	public enum Header
+	{
+		PLACE_TOKEN((byte)0);
+		
+		private byte value;
+		
+		private Header(byte value)
+		{
+			this.value = value;
+		}
+		
+		public byte getByteValue()
+		{
+			return value;
+		}
+	}
+
+	/**
+	 * Sends a package with the given header to the participant.
+	 * @param header
+	 * @param payload
+	 */
+	public void sendPackage(Header header, byte[] payload)
+	{
+		byte[] messageData = new byte[payload.length + 1];
+		ByteBuffer buffer = ByteBuffer.wrap(payload, 1, payload.length);
+		buffer.put(0, header.getByteValue());
+		
+		client.sendReliableRealTimeMessage(null, messageData, roomId, participantId);
+	}
+	
+	/**
+	 * The integer value will be casted to a byte value!
+	 * Larger numbers need to be converted to a byte array first.
+	 * @param header
+	 * @param payload
+	 */
+	public void sendPackage(Header header, int payload)
+	{
+		sendPackage(header,(byte) payload);
+	}
+
+	@Override
+	public void onRealTimeMessageReceived(RealTimeMessage rtm) {
+		
+		byte[] message = rtm.getMessageData();
+		
+		// TODO: Process message
+	}
+	
+}
