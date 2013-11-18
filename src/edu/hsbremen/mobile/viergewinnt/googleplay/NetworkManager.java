@@ -1,6 +1,7 @@
 package edu.hsbremen.mobile.viergewinnt.googleplay;
 
 import java.nio.ByteBuffer;
+import java.util.Observable;
 
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
@@ -13,7 +14,8 @@ import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceived
  * @author Thorsten
  *
  */
-public class NetworkManager implements RealTimeMessageReceivedListener {
+public class NetworkManager extends Observable 
+	implements RealTimeMessageReceivedListener {
 	
 	GamesClient client;
 	String roomId;
@@ -26,25 +28,7 @@ public class NetworkManager implements RealTimeMessageReceivedListener {
 		this.participantId = participantId;
 	}
 	
-	/**
-	 * Possible network header 
-	 */
-	public enum Header
-	{
-		PLACE_TOKEN((byte)0);
-		
-		private byte value;
-		
-		private Header(byte value)
-		{
-			this.value = value;
-		}
-		
-		public byte getByteValue()
-		{
-			return value;
-		}
-	}
+	
 
 	/**
 	 * Sends a package with the given header to the participant.
@@ -71,12 +55,20 @@ public class NetworkManager implements RealTimeMessageReceivedListener {
 		sendPackage(header,(byte) payload);
 	}
 
+	/**
+	 * Message received handler.
+	 */
 	@Override
 	public void onRealTimeMessageReceived(RealTimeMessage rtm) {
 		
 		byte[] message = rtm.getMessageData();
 		
-		// TODO: Process message
+		//notify observers, that a new message has been received. 
+		
+		super.setChanged();
+		super.notifyObservers(message);
 	}
+	
+	
 	
 }
