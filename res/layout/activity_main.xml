@@ -40,4 +40,24 @@
     android:text="Sign Out" 
     android:visibility="gone"/>
 
+<Button
+    android:id="@+id/invitation_box_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/button1"
+    android:layout_below="@+id/button1"
+    android:layout_marginTop="86dp"
+    android:text="@string/invitation_box"
+    android:onClick="showInvitationBox" />
+
+<Button
+    android:id="@+id/invite_players_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/invitation_box_button"
+    android:layout_alignRight="@+id/invitation_box_button"
+    android:layout_centerVertical="true"
+    android:text="@string/invite_players"
+    android:onClick="invitePlayers" />
+
 </RelativeLayout>

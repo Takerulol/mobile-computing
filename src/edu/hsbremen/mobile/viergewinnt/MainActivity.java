@@ -1,15 +1,36 @@
 package edu.hsbremen.mobile.viergewinnt;
 
+import java.util.ArrayList;
+
+import com.google.android.gms.games.GamesClient;
+import com.google.android.gms.games.multiplayer.Invitation;
+import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
+import com.google.android.gms.games.multiplayer.realtime.Room;
+import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
+import com.google.android.gms.games.multiplayer.realtime.RoomConfig.Builder;
+import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.example.games.basegameutils.BaseGameActivity;
+
+import edu.hsbremen.mobile.viergewinnt.googleplay.NetworkManager;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 
 public class MainActivity extends BaseGameActivity 
-implements View.OnClickListener {
+implements View.OnClickListener, OnInvitationReceivedListener, RoomUpdateListener {
+	
+	// request code (can be any number, as long as it's unique)
+	final static int RC_INVITATION_INBOX = 10001;
+	final static int RC_SELECT_PLAYERS = 10000;
+
+	
+
+	
+	private NetworkManager networkManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +67,22 @@ implements View.OnClickListener {
 	    findViewById(R.id.sign_in_button).setVisibility(View.GONE);
 	    findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
 
+	    // Set InvitationListener to accept invitations during gameplay
+	    getGamesClient().registerInvitationListener(this);
+	    
+	    // handle possible invitations
+	    if (getInvitationId() != null) {
+	        Builder roomConfigBuilder = makeBasicRoomConfigBuilder();
+	        roomConfigBuilder.setInvitationIdToAccept(getInvitationId());
+	        getGamesClient().joinRoom(roomConfigBuilder.build());
+
+	        // prevent screen from sleeping during handshake
+	        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+	        // TODO Clear flag after game
+	        // TODO go to game screen
+	    }
+
 	    // (your code here: update UI, enable functionality that depends on sign in, etc)
 		
 	}
@@ -63,9 +100,160 @@ implements View.OnClickListener {
 	        // show sign-in button, hide the sign-out button
 	        findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
 	        findViewById(R.id.sign_out_button).setVisibility(View.GONE);
-	    }
+	    }		
+	}
+	
+	private void startQuickGame() {
+	    // automatch criteria to invite 1 random automatch opponent.  
+	    // You can also specify more opponents (up to 3). 
+	    Bundle am = RoomConfig.createAutoMatchCriteria(1, 1, 0);
 
+	    // build the room config:
+	    RoomConfig.Builder roomConfigBuilder = makeBasicRoomConfigBuilder();
+	    roomConfigBuilder.setAutoMatchCriteria(am);
+	    RoomConfig roomConfig = roomConfigBuilder.build();
+
+	    // create room:
+	    getGamesClient().createRoom(roomConfig);
+
+	    // prevent screen from sleeping during handshake
+	    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+	    // go to game screen
+	}
+
+	private Builder makeBasicRoomConfigBuilder() {
+		networkManager = new NetworkManager(getGamesClient(), "0", "0");
+		RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(this);
+        rtmConfigBuilder.setMessageReceivedListener(networkManager);
+        //rtmConfigBuilder.setRoomStatusUpdateListener(this);
+        
+        return rtmConfigBuilder;
+	}
+
+	@Override
+	public void onLeftRoom(int arg0, String arg1) {
+		// TODO Auto-generated method stub
 		
 	}
+
+	
+	@Override
+	public void onRoomCreated(int statusCode, Room room) {
+	    if (statusCode != GamesClient.STATUS_OK) {
+	        // let screen go to sleep
+	        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+	        // show error message, return to main screen.
+	    }
+	}
+
+	@Override
+	public void onJoinedRoom(int statusCode, Room room) {
+	    if (statusCode != GamesClient.STATUS_OK) {
+	        // let screen go to sleep
+	        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+	        // show error message, return to main screen.
+	    }
+	}
+
+	@Override
+	public void onRoomConnected(int statusCode, Room room) {
+	    if (statusCode != GamesClient.STATUS_OK) {
+	        // let screen go to sleep
+	        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+	        // show error message, return to main screen.
+	    }
+	}
+
+
+	@Override
+	public void onInvitationReceived(Invitation arg0) {
+		// TODO Implement to handle invitiations during gameplay
+	}
+
+	public void showInvitationBox()
+	{
+		// launch the intent to show the invitation inbox screen
+		Intent intent = getGamesClient().getInvitationInboxIntent();
+		startActivityForResult(intent, RC_INVITATION_INBOX);
+	}
+	
+	@Override
+	public void onActivityResult(int request, int response, Intent data) {
+	    if (request == RC_INVITATION_INBOX) {
+	        if (response != Activity.RESULT_OK) {
+	            // canceled
+	            return;
+	        }
+
+	        // get the selected invitation
+	        Bundle extras = data.getExtras();
+	        Invitation invitation =
+	            extras.getParcelable(GamesClient.EXTRA_INVITATION);
+
+	        // accept it!
+	        RoomConfig roomConfig = makeBasicRoomConfigBuilder()
+	                .setInvitationIdToAccept(invitation.getInvitationId())
+	                .build();
+	        getGamesClient().joinRoom(roomConfig);
+
+	        // prevent screen from sleeping during handshake
+	        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+	        // TODO go to game screen
+	    }
+	    
+	    else if (request == RC_SELECT_PLAYERS) {
+	        if (response != Activity.RESULT_OK) {
+	            // user canceled
+	            return;
+	        }
+
+	        // get the invitee list
+	        Bundle extras = data.getExtras();
+	        final ArrayList<String> invitees =
+	            data.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
+
+	        // get automatch criteria
+	        Bundle autoMatchCriteria = null;
+	        int minAutoMatchPlayers =
+	            data.getIntExtra(GamesClient.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
+	        int maxAutoMatchPlayers =
+	            data.getIntExtra(GamesClient.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
+
+	        if (minAutoMatchPlayers > 0) {
+	            autoMatchCriteria =
+	                RoomConfig.createAutoMatchCriteria(
+	                    minAutoMatchPlayers, maxAutoMatchPlayers, 0);
+	        } else {
+	            autoMatchCriteria = null;
+	        }
+
+	        // create the room and specify a variant if appropriate
+	        RoomConfig.Builder roomConfigBuilder = makeBasicRoomConfigBuilder();
+	        roomConfigBuilder.addPlayersToInvite(invitees);
+	        if (autoMatchCriteria != null) {
+	            roomConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
+	        }
+	        RoomConfig roomConfig = roomConfigBuilder.build();
+	        getGamesClient().createRoom(roomConfig);
+
+	        // prevent screen from sleeping during handshake
+	        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	    }
+
+	}
+	
+	public void invitePlayers() {
+		// launch the player selection screen
+		// minimum: 1 other player; maximum: 1 other players
+		Intent intent = getGamesClient().getSelectPlayersIntent(1, 1);
+		startActivityForResult(intent, RC_SELECT_PLAYERS);
+
+	}
+
 
 }

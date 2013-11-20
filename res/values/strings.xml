@@ -11,5 +11,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="start_game">Start Game</string>
     <string name="title_activity_match">MatchActivity</string>
+    <string name="invitation_box">Invitation Box</string>
+    <string name="invite_players">Invite Players</string>
     
 </resources>
