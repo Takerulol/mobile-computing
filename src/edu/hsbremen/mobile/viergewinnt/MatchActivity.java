@@ -36,7 +36,7 @@ public class MatchActivity extends Activity {
 
 	private void init() {
 		init = false;
-		GameLogic gameLogic = new GameLogicImpl();
+		logic = new GameLogicImpl();
 		logic.startGame();
 		tokenList = new ImageView[GameLogicImpl.WIDTH][GameLogicImpl.HEIGHT];
 		buttons = new Button[GameLogicImpl.WIDTH];

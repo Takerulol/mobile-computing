@@ -16,5 +16,28 @@
         android:layout_alignParentTop="true"
         android:text="@string/start_game"
         android:onClick="startGame" />
+    
+    <!-- sign-in button -->
+
+<!-- sign-out button -->
+
+<com.google.android.gms.common.SignInButton
+    android:id="@+id/sign_in_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="38dp" >
+</com.google.android.gms.common.SignInButton>
+
+<Button
+    android:id="@+id/sign_out_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/button1"
+    android:layout_below="@+id/button1"
+    android:layout_marginTop="21dp"
+    android:text="Sign Out" 
+    android:visibility="gone"/>
 
 </RelativeLayout>
