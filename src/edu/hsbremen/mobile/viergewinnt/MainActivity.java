@@ -2,6 +2,7 @@ package edu.hsbremen.mobile.viergewinnt;
 
 import java.util.ArrayList;
 
+import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
@@ -165,7 +166,7 @@ implements View.OnClickListener, OnInvitationReceivedListener {
 	                .setInvitationIdToAccept(invitation.getInvitationId())
 	                .build();
 	        getGamesClient().joinRoom(roomConfig);
-
+	        
 	        // prevent screen from sleeping during handshake
 	        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -210,6 +211,28 @@ implements View.OnClickListener, OnInvitationReceivedListener {
 	        // prevent screen from sleeping during handshake
 	        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	    }
+	    
+	    else if (request == RoomManager.RC_WAITING_ROOM) {
+	        if (response == Activity.RESULT_OK) {
+	            // (start game)
+	        }
+	        else if (response == Activity.RESULT_CANCELED) {
+	            // Waiting room was dismissed with the back button. The meaning of this
+	            // action is up to the game. You may choose to leave the room and cancel the
+	            // match, or do something else like minimize the waiting room and
+	            // continue to connect in the background.
+
+	            // in this example, we take the simple approach and just leave the room:
+	            roomManager.leaveRoom();
+	            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	        }
+	        else if (response == GamesActivityResultCodes.RESULT_LEFT_ROOM) {
+	            // player wants to leave the room.
+	            roomManager.leaveRoom();
+	            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	        }
+	    }
+
 
 	}
 	

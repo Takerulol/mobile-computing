@@ -2,6 +2,8 @@ package edu.hsbremen.mobile.viergewinnt.googleplay;
 
 import java.util.List;
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.google.android.gms.games.GamesClient;
@@ -21,13 +23,21 @@ import com.google.example.games.basegameutils.BaseGameActivity;
  */
 public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener {
 
+	// arbitrary request code for the waiting room UI.
+	// This can be any integer that's unique in your Activity.
+	public final static int RC_WAITING_ROOM = 10002;
+	final static int REQUIRED_PLAYERS = 2;
+
+	
 	// are we already playing?
 	private boolean mPlaying = false;
 	private BaseGameActivity activity;
 	private GamesClient gamesClient;
+	private String mRoomId = null;
 
 	// at least 2 players required for our game
 	final static int MIN_PLAYERS = 2;
+	private static final String TAG = "RoomManager";
 
 	
 	public RoomManager(BaseGameActivity activity, GamesClient gamesClient)
@@ -100,14 +110,24 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	
 	
 	@Override
-	public void onConnectedToRoom(Room arg0) {
-		// TODO Auto-generated method stub
-		
+	public void onConnectedToRoom(Room room) {
+		Log.d(TAG, "onConnectedToRoom.");
+
+        // get room ID, participants and my ID:
+        mRoomId = room.getRoomId();
+        //mParticipants = room.getParticipants();
+        //mMyId = room.getParticipantId(getGamesClient().getCurrentPlayerId());
+
+        // print out the list of participants (for debug purposes)
+        Log.d(TAG, "Room ID: " + mRoomId);
+        //Log.d(TAG, "My ID " + mMyId);
+        Log.d(TAG, "<< CONNECTED TO ROOM>>");
 	}
 
 	@Override
 	public void onDisconnectedFromRoom(Room arg0) {
-		// TODO Auto-generated method stub
+		mRoomId = null;
+		//TODO show error and switch to main screen
 		
 	}
 
@@ -162,6 +182,14 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 
 	        // show error message, return to main screen.
 	    }
+	    
+	    else
+	    {
+	    	// get waiting room intent
+	        Intent i = gamesClient.getRealTimeWaitingRoomIntent(room, REQUIRED_PLAYERS);
+	        activity.startActivityForResult(i, RC_WAITING_ROOM);
+
+	    }
 	}
 
 	@Override
@@ -171,6 +199,14 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 	        // show error message, return to main screen.
+	    }
+	    
+	    else
+	    {
+	    	// get waiting room intent
+	        Intent i = gamesClient.getRealTimeWaitingRoomIntent(room, REQUIRED_PLAYERS);
+	        activity.startActivityForResult(i, RC_WAITING_ROOM);
+
 	    }
 	}
 
@@ -183,4 +219,21 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	        // show error message, return to main screen.
 	    }
 	}
+	
+	/**
+	 * Leaves the room and returns to the main screen
+	 */
+    public void leaveRoom() {
+        Log.d(TAG, "Leaving room.");
+//        mSecondsLeft = 0;
+//        stopKeepingScreenOn();
+//        if (mRoomId != null) {
+            gamesClient.leaveRoom(this, mRoomId);
+            mRoomId = null;
+//            switchToScreen(R.id.screen_wait);
+//        } else {
+//            switchToMainScreen();
+//        }
+    }
+	
 }
