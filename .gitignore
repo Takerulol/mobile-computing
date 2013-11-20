@@ -8,3 +8,5 @@ gen/
 bin/
 .settings/
 Thumbs.db
+.classpath
+.project
