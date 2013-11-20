@@ -12,6 +12,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import edu.hsbremen.mobile.viergewinnt.googleplay.NetworkManager;
+import edu.hsbremen.mobile.viergewinnt.googleplay.RoomManager;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -21,16 +22,14 @@ import android.view.View;
 import android.view.WindowManager;
 
 public class MainActivity extends BaseGameActivity 
-implements View.OnClickListener, OnInvitationReceivedListener, RoomUpdateListener {
+implements View.OnClickListener, OnInvitationReceivedListener {
 	
 	// request code (can be any number, as long as it's unique)
 	final static int RC_INVITATION_INBOX = 10001;
 	final static int RC_SELECT_PLAYERS = 10000;
-
-	
-
 	
 	private NetworkManager networkManager;
+	private RoomManager roomManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +39,9 @@ implements View.OnClickListener, OnInvitationReceivedListener, RoomUpdateListene
 		//Sign In / Sign Out buttons
 		findViewById(R.id.sign_in_button).setOnClickListener(this);
 		findViewById(R.id.sign_out_button).setOnClickListener(this);
+		
+		//initialize fields
+		roomManager = new RoomManager(this,getGamesClient());
 	}
 
 	@Override
@@ -124,51 +126,15 @@ implements View.OnClickListener, OnInvitationReceivedListener, RoomUpdateListene
 
 	private Builder makeBasicRoomConfigBuilder() {
 		networkManager = new NetworkManager(getGamesClient(), "0", "0");
-		RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(this);
+		RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(roomManager);
         rtmConfigBuilder.setMessageReceivedListener(networkManager);
+        rtmConfigBuilder.setRoomStatusUpdateListener(roomManager);
         //rtmConfigBuilder.setRoomStatusUpdateListener(this);
         
         return rtmConfigBuilder;
 	}
 
-	@Override
-	public void onLeftRoom(int arg0, String arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	
-	@Override
-	public void onRoomCreated(int statusCode, Room room) {
-	    if (statusCode != GamesClient.STATUS_OK) {
-	        // let screen go to sleep
-	        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-	        // show error message, return to main screen.
-	    }
-	}
-
-	@Override
-	public void onJoinedRoom(int statusCode, Room room) {
-	    if (statusCode != GamesClient.STATUS_OK) {
-	        // let screen go to sleep
-	        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-	        // show error message, return to main screen.
-	    }
-	}
-
-	@Override
-	public void onRoomConnected(int statusCode, Room room) {
-	    if (statusCode != GamesClient.STATUS_OK) {
-	        // let screen go to sleep
-	        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-	        // show error message, return to main screen.
-	    }
-	}
-
-
 	@Override
 	public void onInvitationReceived(Invitation arg0) {
 		// TODO Implement to handle invitiations during gameplay
