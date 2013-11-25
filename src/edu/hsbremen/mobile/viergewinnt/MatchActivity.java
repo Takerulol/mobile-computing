@@ -1,22 +1,20 @@
 package edu.hsbremen.mobile.viergewinnt;
 
-import edu.hsbremen.mobile.viergewinnt.logic.GameLogic;
-import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
-import edu.hsbremen.mobile.viergewinnt.logic.Token;
-import android.os.Bundle;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.support.v4.app.NavUtils;
-import android.annotation.TargetApi;
-import android.os.Build;
+import edu.hsbremen.mobile.viergewinnt.logic.GameLogic;
+import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
+import edu.hsbremen.mobile.viergewinnt.logic.Token;
 
 public class MatchActivity extends Activity {
 
@@ -31,12 +29,12 @@ public class MatchActivity extends Activity {
 		setContentView(R.layout.activity_match);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		if(init ) init();
+		if(init) init();
 	}
 
 	private void init() {
 		init = false;
-		GameLogic gameLogic = new GameLogicImpl();
+		logic = new GameLogicImpl();
 		logic.startGame();
 		tokenList = new ImageView[GameLogicImpl.WIDTH][GameLogicImpl.HEIGHT];
 		buttons = new Button[GameLogicImpl.WIDTH];

@@ -11,5 +11,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="start_game">Start Game</string>
     <string name="title_activity_match">MatchActivity</string>
+    <string name="sign_in_text">Come on login, dear sir.</string>
+    <string name="signed_in_text">You are signed in, kind sir.</string>
+    <string name="achievements">Achievements</string>
+ 	<string name="leaderboards">Leaderboards</string>
+ 	<string name="sign_out">Sign Out</string>
+ 	<string name="not_logged_in">You are not logged in.</string>
     
 </resources>
