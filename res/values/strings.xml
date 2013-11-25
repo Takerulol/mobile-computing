@@ -17,5 +17,8 @@
  	<string name="leaderboards">Leaderboards</string>
  	<string name="sign_out">Sign Out</string>
  	<string name="not_logged_in">You are not logged in.</string>
+    <string name="invitation_box">Invitation Box</string>
+    <string name="invite_players">Invite Players</string>
+    
     
 </resources>
