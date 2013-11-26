@@ -16,8 +16,8 @@ import com.google.example.games.basegameutils.BaseGameActivity;
 public class InvitationManager implements OnInvitationReceivedListener {
 
 	private BaseGameActivity activity;
-	private GamesClient gamesClient;
 	private RoomManager roomManager;
+	private GamesClient gamesClient;
 
 	public InvitationManager(BaseGameActivity activity, GamesClient client, RoomManager roomManager)
 	{
@@ -29,9 +29,16 @@ public class InvitationManager implements OnInvitationReceivedListener {
 	}
 	
 	@Override
-	public void onInvitationReceived(Invitation arg0) {
-		// TODO Auto-generated method stub
+	public void onInvitationReceived(Invitation invitation) {
+		// TODO Used to accept invitations during gameplay
 		
+		// show in-game popup to let user know of pending invitation
+
+	    // store invitation for use when player accepts this invitation
+	    //mIncomingInvitationId = invitation.getInvitationId();
+
+		//--> roomManager.acceptInvitation(mInomingInvitationId);
+		//--> when the user accepts the popup invitation shown earlier.
 	}
 	
 	/**

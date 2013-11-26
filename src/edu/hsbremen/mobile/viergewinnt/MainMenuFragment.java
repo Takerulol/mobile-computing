@@ -2,6 +2,7 @@ package edu.hsbremen.mobile.viergewinnt;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		public void onShowHighscores();
 		public void onSignInButton();
 		public void onSignOutButton();
+		public void onShowInvitations();
+		public void onQuickGame();
+		public void onInvitePlayers(); 
 		public void onError(String msg);
 	}
 	
@@ -36,7 +40,8 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		final int[] CLICKABLES = new int[] {
 			R.id.start_button, R.id.achievement_button,
 			R.id.leaderboard_button, R.id.sign_in_button,
-			R.id.sign_out_button
+			R.id.sign_out_button, R.id.invitation_box,
+			R.id.quick_game, R.id.invite_players
 		};
 		for(int i : CLICKABLES) {
 			v.findViewById(i).setOnClickListener(this);
@@ -53,6 +58,7 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	
 	@Override
 	public void onClick(View v) {
+		
 		switch (v.getId()) {
 		case R.id.start_button:
 			this.listener.onMultiplayerGame();
@@ -72,6 +78,18 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 			
 		case R.id.sign_out_button:
 			this.listener.onSignOutButton();
+			break;
+			
+		case R.id.quick_game:
+			this.listener.onQuickGame(); 
+			break;
+			
+		case R.id.invitation_box:
+			this.listener.onShowInvitations();
+			break;
+			
+		case R.id.invite_players:
+			this.listener.onInvitePlayers();
 			break;
 			
 		default:

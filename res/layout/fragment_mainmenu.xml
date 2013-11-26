@@ -13,6 +13,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start_game" />
+
+    <Button
+        android:id="@+id/quick_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/quick_game" />
+
+    <Button
+        android:id="@+id/invite_players"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/invite_players" />
+
+    <Button
+        android:id="@+id/invitation_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/invitation_box" />
     
     <Button 
         android:id="@+id/achievement_button"
@@ -25,48 +43,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/leaderboards" />
-    
-    
-    
-    <LinearLayout android:id="@+id/sign_in_bar"
-        android:layout_height="120dp"
+
+    <LinearLayout
+        android:id="@+id/sign_in_bar"
         android:layout_width="match_parent"
-        android:background="#f0f0f0"
+        android:layout_height="52dp"
         android:layout_marginTop="30dp"
-        android:orientation="horizontal"
+        android:background="#f0f0f0"
         android:gravity="center"
-        android:padding="10dp">
+        android:orientation="horizontal"
+        android:padding="10dp" >
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" >
+        </com.google.android.gms.common.SignInButton>
 
-        <TextView android:layout_width="0dp"
-            android:layout_weight="1"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/sign_in_text"
             android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="@string/sign_in_text"
             android:textColor="#808080" />
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/sign_out_bar"
-        android:layout_height="120dp"
+    <LinearLayout
+        android:id="@+id/sign_out_bar"
         android:layout_width="match_parent"
-        android:background="#f0f0f0"
+        android:layout_height="54dp"
         android:layout_marginTop="30dp"
-        android:orientation="horizontal"
+        android:background="#f0f0f0"
         android:gravity="center|right"
-        android:padding="10dp">
+        android:orientation="horizontal"
+        android:padding="10dp" >
 
-        <TextView android:layout_width="0dp"
-            android:layout_weight="1"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/signed_in_text"
             android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="@string/signed_in_text"
             android:textColor="#808080" />
 
-         <Button
+        <Button
             android:id="@+id/sign_out_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,5 +1,7 @@
 package edu.hsbremen.mobile.viergewinnt;
 
+import com.google.android.gms.games.GamesClient;
+import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import edu.hsbremen.mobile.viergewinnt.googleplay.InvitationManager;
@@ -19,6 +21,8 @@ public class MainActivity extends BaseGameActivity
 	private MatchFragment matchFragment;
 
 	final int RC_RESOLVE = 5000, RC_UNUSED = 5001;
+	final static int RC_INVITATION_INBOX = 10001;
+
 	private RoomManager roomManager;
 	private InvitationManager invitationManager;
 	
@@ -42,7 +46,6 @@ public class MainActivity extends BaseGameActivity
 //			this.mainMenuFragment.setShowSignInButton(false);
 //		}
 		
-		initializeHelperClasses();
 	}
 	
 	private void initializeHelperClasses()
@@ -67,6 +70,8 @@ public class MainActivity extends BaseGameActivity
 	@Override
 	public void onSignInSucceeded() {
 		this.mainMenuFragment.setShowSignInButton(false);
+		
+		initializeHelperClasses();
 		//handle possible invitations
 		this.invitationManager.handleInvitation(getInvitationId());
 	}
@@ -125,4 +130,44 @@ public class MainActivity extends BaseGameActivity
 		showAlert(msg);
 	}
 
+	@Override
+	public void onShowInvitations() {		
+		if (isSignedIn()) {
+			Intent intent = getGamesClient().getInvitationInboxIntent();
+			this.startActivityForResult(intent, RC_INVITATION_INBOX);	
+        } else {
+            showAlert(getString(R.string.not_logged_in));
+        }
+	}
+
+	@Override
+	public void onQuickGame() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onInvitePlayers() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void onActivityResult(int request, int response, Intent data) {
+	    if (request == RC_INVITATION_INBOX) {
+	        if (response != Activity.RESULT_OK) {
+	            // canceled
+	            return;
+	        }
+
+	        // get the selected invitation
+	        Bundle extras = data.getExtras();
+	        Invitation invitation =
+	            extras.getParcelable(GamesClient.EXTRA_INVITATION);
+
+	        // accept it!
+	        this.invitationManager.handleInvitation(invitation.getInvitationId());
+	    }
+	}
+	
 }
