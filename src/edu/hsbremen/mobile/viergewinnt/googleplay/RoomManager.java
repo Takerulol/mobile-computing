@@ -3,6 +3,7 @@ package edu.hsbremen.mobile.viergewinnt.googleplay;
 import java.util.List;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 
@@ -250,6 +251,8 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 
         // prevent screen from sleeping during handshake
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        
+     // TODO go to game screen (maybe use onStartGameListener)
     }
     
     private Builder makeBasicRoomConfigBuilder() {
@@ -259,6 +262,26 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
         rtmConfigBuilder.setRoomStatusUpdateListener(this);
         
         return rtmConfigBuilder;
+	}
+    
+    public void startQuickGame() {
+	    // automatch criteria to invite 1 random automatch opponent.  
+	    // You can also specify more opponents (up to 3). 
+    	int minMaxPlayers = REQUIRED_PLAYERS - 1; 
+	    Bundle am = RoomConfig.createAutoMatchCriteria(minMaxPlayers, minMaxPlayers, 0);
+
+	    // build the room config:
+	    RoomConfig.Builder roomConfigBuilder = makeBasicRoomConfigBuilder();
+	    roomConfigBuilder.setAutoMatchCriteria(am);
+	    RoomConfig roomConfig = roomConfigBuilder.build();
+
+	    // create room:
+	    gamesClient.createRoom(roomConfig);
+
+	    // prevent screen from sleeping during handshake
+	    activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+	    // TODO go to game screen (maybe use onStartGameListener)
 	}
 	
 }

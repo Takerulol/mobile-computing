@@ -142,7 +142,11 @@ public class MainActivity extends BaseGameActivity
 
 	@Override
 	public void onQuickGame() {
-		// TODO Auto-generated method stub
+		if (isSignedIn()) {
+			this.roomManager.startQuickGame();	
+        } else {
+            showAlert(getString(R.string.not_logged_in));
+        }
 		
 	}
 
