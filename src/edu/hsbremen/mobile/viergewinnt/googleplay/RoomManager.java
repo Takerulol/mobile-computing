@@ -9,8 +9,10 @@ import android.view.WindowManager;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.Room;
+import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
+import com.google.android.gms.games.multiplayer.realtime.RoomConfig.Builder;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 
@@ -235,5 +237,28 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 //            switchToMainScreen();
 //        }
     }
+    
+    /**
+     * Accepts the invitation and joins the room.
+     * @param InvitationId
+     */
+    public void acceptInvitation(String InvitationId)
+    {
+    	Builder roomConfigBuilder = makeBasicRoomConfigBuilder();
+        roomConfigBuilder.setInvitationIdToAccept(InvitationId);
+        gamesClient.joinRoom(roomConfigBuilder.build());
+
+        // prevent screen from sleeping during handshake
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+    
+    private Builder makeBasicRoomConfigBuilder() {
+		NetworkManager networkManager = new NetworkManager(gamesClient, "0", "0");
+		RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(this);
+        rtmConfigBuilder.setMessageReceivedListener(networkManager);
+        rtmConfigBuilder.setRoomStatusUpdateListener(this);
+        
+        return rtmConfigBuilder;
+	}
 	
 }

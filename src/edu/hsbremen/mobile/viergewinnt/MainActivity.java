@@ -2,6 +2,9 @@ package edu.hsbremen.mobile.viergewinnt;
 
 import com.google.example.games.basegameutils.BaseGameActivity;
 
+import edu.hsbremen.mobile.viergewinnt.googleplay.InvitationManager;
+import edu.hsbremen.mobile.viergewinnt.googleplay.RoomManager;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +19,8 @@ public class MainActivity extends BaseGameActivity
 	private MatchFragment matchFragment;
 
 	final int RC_RESOLVE = 5000, RC_UNUSED = 5001;
+	private RoomManager roomManager;
+	private InvitationManager invitationManager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,14 @@ public class MainActivity extends BaseGameActivity
 //			this.mainMenuFragment.setShowSignInButton(false);
 //		}
 		
+		initializeHelperClasses();
+	}
+	
+	private void initializeHelperClasses()
+	{
+		//google play initializations
+		this.roomManager = new RoomManager(this,getGamesClient());
+		this.invitationManager = new InvitationManager(this,getGamesClient(),this.roomManager);
 	}
 
 //	@Override
@@ -54,6 +67,8 @@ public class MainActivity extends BaseGameActivity
 	@Override
 	public void onSignInSucceeded() {
 		this.mainMenuFragment.setShowSignInButton(false);
+		//handle possible invitations
+		this.invitationManager.handleInvitation(getInvitationId());
 	}
 
 	@Override
