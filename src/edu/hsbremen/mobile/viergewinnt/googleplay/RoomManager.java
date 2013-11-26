@@ -1,5 +1,6 @@
 package edu.hsbremen.mobile.viergewinnt.googleplay;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
@@ -283,5 +284,16 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 
 	    // TODO go to game screen (maybe use onStartGameListener)
 	}
+    
+    public void handleAutoMatching(ArrayList<String> invitees) {
+        // create the room and specify a variant if appropriate
+        RoomConfig.Builder roomConfigBuilder = makeBasicRoomConfigBuilder();
+        roomConfigBuilder.addPlayersToInvite(invitees);
+        RoomConfig roomConfig = roomConfigBuilder.build();
+        gamesClient.createRoom(roomConfig);
+
+        // prevent screen from sleeping during handshake
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
 	
 }

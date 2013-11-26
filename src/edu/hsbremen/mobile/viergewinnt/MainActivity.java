@@ -1,5 +1,7 @@
 package edu.hsbremen.mobile.viergewinnt;
 
+import java.util.ArrayList;
+
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.example.games.basegameutils.BaseGameActivity;
@@ -21,7 +23,7 @@ public class MainActivity extends BaseGameActivity
 	private MatchFragment matchFragment;
 
 	final int RC_RESOLVE = 5000, RC_UNUSED = 5001;
-	final static int RC_INVITATION_INBOX = 10001;
+	final static int RC_INVITATION_INBOX = 10001, RC_SELECT_PLAYERS = 10000;
 
 	private RoomManager roomManager;
 	private InvitationManager invitationManager;
@@ -152,7 +154,12 @@ public class MainActivity extends BaseGameActivity
 
 	@Override
 	public void onInvitePlayers() {
-		// TODO Auto-generated method stub
+		if (isSignedIn()) {
+			Intent intent = getGamesClient().getSelectPlayersIntent(1, 3);
+			startActivityForResult(intent, RC_SELECT_PLAYERS);
+        } else {
+            showAlert(getString(R.string.not_logged_in));
+        }
 		
 	}
 	
@@ -172,6 +179,21 @@ public class MainActivity extends BaseGameActivity
 	        // accept it!
 	        this.invitationManager.handleInvitation(invitation.getInvitationId());
 	    }
+	    
+	    else if (request == RC_SELECT_PLAYERS) {
+	        if (response != Activity.RESULT_OK) {
+	            // user canceled
+	            return;
+	        }
+
+	        // get the invitee list
+	        Bundle extras = data.getExtras();
+	        final ArrayList<String> invitees =
+	            data.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
+
+	        this.roomManager.handleAutoMatching(invitees);
+	    }
+
 	}
 	
 }
