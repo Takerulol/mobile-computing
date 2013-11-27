@@ -7,7 +7,12 @@ import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import edu.hsbremen.mobile.viergewinnt.googleplay.InvitationManager;
+import edu.hsbremen.mobile.viergewinnt.googleplay.PlayAchievements;
 import edu.hsbremen.mobile.viergewinnt.googleplay.RoomManager;
+import edu.hsbremen.mobile.viergewinnt.logic.AchievementLogic;
+import edu.hsbremen.mobile.viergewinnt.logic.AchievementProxy;
+import edu.hsbremen.mobile.viergewinnt.logic.GameLogic;
+import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -80,9 +85,17 @@ public class MainActivity extends BaseGameActivity
 
 	@Override
 	public void onMultiplayerGame() {
-		switchToFragment(this.matchFragment);
-		//TODO: implement me further
+		GameLogic logic = new GameLogicImpl();
+		if (isSignedIn())
+		{
+			//provide achievement support
+			AchievementLogic al = new PlayAchievements(getGamesClient(),getBaseContext());
+			logic = new AchievementProxy(logic,al);
+		}
 		
+		this.matchFragment.setLogic(logic);
+		switchToFragment(this.matchFragment);
+		//TODO: implement me further	
 	}
 	
 	void switchToFragment(Fragment newFrag) {

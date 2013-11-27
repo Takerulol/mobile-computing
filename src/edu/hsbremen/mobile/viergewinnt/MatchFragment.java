@@ -20,10 +20,17 @@ public class MatchFragment extends Fragment implements OnClickListener {
 		void onWinnerFound(String msg);
 	}
 
-	ImageView[][] tokenList = null;
-	GameLogic logic;
+	private ImageView[][] tokenList = null;
+	private GameLogic logic;
+	
+
 	private Button[] buttons = null;
 	private Listener listener;
+	
+	public MatchFragment()
+	{
+		logic = new GameLogicImpl();
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +51,6 @@ public class MatchFragment extends Fragment implements OnClickListener {
 	}
 	
 	private void init() {
-		logic = provideGameLogic();
 		logic.startGame();
 		tokenList = new ImageView[GameLogicImpl.WIDTH][GameLogicImpl.HEIGHT];
 		buttons = new Button[GameLogicImpl.WIDTH];
@@ -132,6 +138,14 @@ public class MatchFragment extends Fragment implements OnClickListener {
 	
 	public void setListener(Listener listener) {
 		this.listener = listener;
+	}
+	
+	public GameLogic getLogic() {
+		return logic;
+	}
+
+	public void setLogic(GameLogic logic) {
+		this.logic = logic;
 	}
 
 }
