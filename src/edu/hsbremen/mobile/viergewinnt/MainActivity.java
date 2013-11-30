@@ -26,7 +26,8 @@ import android.view.Menu;
 import android.view.View;
 
 public class MainActivity extends BaseGameActivity 
-		implements MatchFragment.Listener, MainMenuFragment.Listener, RoomManager.Listener {
+		implements MatchFragment.Listener, MainMenuFragment.Listener, RoomManager.Listener,
+    {
 
 	private MainMenuFragment mainMenuFragment;
 	private MatchFragment matchFragment;

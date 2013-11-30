@@ -54,6 +54,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 		this.activity = activity;
 		this.gamesClient = gamesClient;
 		this.listenerList = new ArrayList<Listener>();
+		int i = 1;
 	}
 	
 	public void addListener(Listener listener) {
@@ -119,6 +120,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 
 	@Override
 	public void onPeersConnected(Room room, List<String> peers) {
+		mRoom = room;
 	    if (mPlaying) {
 	        // add new player to an ongoing game
 	    }
@@ -309,7 +311,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
         // prevent screen from sleeping during handshake
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         
-        notifyListener();
+        //notifyListener();
     }
     
     private Builder makeBasicRoomConfigBuilder() {
@@ -338,7 +340,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	    // prevent screen from sleeping during handshake
 	    activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-	    notifyListener();
+	    //notifyListener();
 	}
     
     public void handleAutoMatching(ArrayList<String> invitees) {
