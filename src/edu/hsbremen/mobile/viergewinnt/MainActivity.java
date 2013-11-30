@@ -7,12 +7,16 @@ import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import edu.hsbremen.mobile.viergewinnt.googleplay.InvitationManager;
+import edu.hsbremen.mobile.viergewinnt.googleplay.NetworkManager;
 import edu.hsbremen.mobile.viergewinnt.googleplay.PlayAchievements;
+import edu.hsbremen.mobile.viergewinnt.googleplay.RemoteGameLogic;
 import edu.hsbremen.mobile.viergewinnt.googleplay.RoomManager;
+import edu.hsbremen.mobile.viergewinnt.googleplay.RoomManager.Listener;
 import edu.hsbremen.mobile.viergewinnt.logic.AchievementLogic;
 import edu.hsbremen.mobile.viergewinnt.logic.AchievementProxy;
 import edu.hsbremen.mobile.viergewinnt.logic.GameLogic;
 import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
+import edu.hsbremen.mobile.viergewinnt.logic.Token;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -22,7 +26,7 @@ import android.view.Menu;
 import android.view.View;
 
 public class MainActivity extends BaseGameActivity 
-		implements MatchFragment.Listener, MainMenuFragment.Listener {
+		implements MatchFragment.Listener, MainMenuFragment.Listener, RoomManager.Listener {
 
 	private MainMenuFragment mainMenuFragment;
 	private MatchFragment matchFragment;
@@ -59,6 +63,7 @@ public class MainActivity extends BaseGameActivity
 	{
 		//google play initializations
 		this.roomManager = new RoomManager(this,getGamesClient());
+		this.roomManager.addListener(this);
 		this.invitationManager = new InvitationManager(this,getGamesClient(),this.roomManager);
 	}
 
@@ -207,6 +212,38 @@ public class MainActivity extends BaseGameActivity
 	        this.roomManager.handleAutoMatching(invitees);
 	    }
 
+	}
+
+	@Override
+	public void onStartMultiplayerGame(boolean firstPlayer) {
+		if (isSignedIn()) {
+			
+			//initialize game logic with achievement support 
+			// TODO achievement logic depending on token
+			GameLogic logic = new GameLogicImpl();
+			AchievementLogic al = new PlayAchievements(getGamesClient(),getBaseContext());
+			logic = new AchievementProxy(logic,al);
+			
+			//Red or Blue token?
+			Token localToken = Token.None;
+			if (firstPlayer) {
+				localToken = Token.Red;
+			} else {
+				localToken = Token.Blue;
+			}
+			
+			//initialize network manager and remote logic
+			NetworkManager manager = new NetworkManager
+					(getGamesClient(), roomManager.getRoomId(), roomManager.getParticipantId());
+			logic = new RemoteGameLogic(localToken, manager);
+			
+			//start game
+			this.matchFragment.setLogic(logic);
+			switchToFragment(this.matchFragment);
+		}
+		else {
+			showAlert(getString(R.string.not_logged_in));
+		}
 	}
 	
 }

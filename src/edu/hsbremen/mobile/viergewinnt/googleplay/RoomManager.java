@@ -27,6 +27,10 @@ import com.google.example.games.basegameutils.BaseGameActivity;
  */
 public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener {
 
+	public interface Listener {
+		void onStartMultiplayerGame(boolean firstPlayer);
+	}
+	
 	// arbitrary request code for the waiting room UI.
 	// This can be any integer that's unique in your Activity.
 	public final static int RC_WAITING_ROOM = 10002;
@@ -38,16 +42,60 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	private BaseGameActivity activity;
 	private GamesClient gamesClient;
 	private String mRoomId = null;
+	private String participantId = null;
+	private Room mRoom = null;
 
-	// at least 2 players required for our game
-	final static int MIN_PLAYERS = 2;
 	private static final String TAG = "RoomManager";
 
+	private List<Listener> listenerList;
 	
 	public RoomManager(BaseGameActivity activity, GamesClient gamesClient)
 	{
 		this.activity = activity;
 		this.gamesClient = gamesClient;
+		this.listenerList = new ArrayList<Listener>();
+	}
+	
+	public void addListener(Listener listener) {
+		this.listenerList.add(listener);
+	}
+	
+	public void removeListener(Listener listener) {
+		this.listenerList.remove(listener);
+	}
+	
+	/**
+	 * Notifies all listeners with the onStartMultiplayerGame method.
+	 * @param host Determines whether or not the local player is the host.
+	 */
+	private void notifyListener() {
+		boolean firstPlayer = isFirstPlayer(mRoom);
+		for (Listener lis : listenerList) {
+			lis.onStartMultiplayerGame(firstPlayer);
+		}
+	}
+	
+	/**
+	 * Determines whether or not the local player should be the first player.
+	 * In order to do this, the random playerids are getting compared.
+	 * In addition, the participantId gets set.
+	 */
+	private boolean isFirstPlayer(Room room) {
+		String localId = room.getParticipantId(gamesClient.getCurrentPlayerId());
+		String remoteId = null;
+
+		ArrayList<String> ids = room.getParticipantIds();
+		for(int i=0; i<ids.size(); i++)
+		{
+		    String test = ids.get(i);
+		    if( !test.equals(localId))
+		    {
+		        remoteId = test;
+		        break;
+		    }
+		}
+		this.participantId = remoteId;
+		return localId.compareTo(remoteId) > 0;
 	}
 	
 	// returns whether there are enough players to start the game
@@ -56,7 +104,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	    for (Participant p : room.getParticipants()) {
 	        if (p.isConnectedToRoom()) ++connectedPlayers;
 	    }
-	    return connectedPlayers >= MIN_PLAYERS;
+	    return connectedPlayers >= REQUIRED_PLAYERS;
 	}
 
 	// Returns whether the room is in a state where the game should be cancelled.
@@ -75,7 +123,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	        // add new player to an ongoing game
 	    }
 	    else if (shouldStartGame(room)) {
-	        // start game!
+	        notifyListener();
 	    }
 	}
 
@@ -119,6 +167,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 
         // get room ID, participants and my ID:
         mRoomId = room.getRoomId();
+        mRoom = room;
         //mParticipants = room.getParticipants();
         //mMyId = room.getParticipantId(getGamesClient().getCurrentPlayerId());
 
@@ -131,6 +180,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	@Override
 	public void onDisconnectedFromRoom(Room arg0) {
 		mRoomId = null;
+		mRoom = null;
 		//TODO show error and switch to main screen
 		
 	}
@@ -190,6 +240,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	    else
 	    {
 	    	// get waiting room intent
+	    	mRoom = room;
 	        Intent i = gamesClient.getRealTimeWaitingRoomIntent(room, REQUIRED_PLAYERS);
 	        activity.startActivityForResult(i, RC_WAITING_ROOM);
 
@@ -208,6 +259,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	    else
 	    {
 	    	// get waiting room intent
+	    	mRoom = room;
 	        Intent i = gamesClient.getRealTimeWaitingRoomIntent(room, REQUIRED_PLAYERS);
 	        activity.startActivityForResult(i, RC_WAITING_ROOM);
 
@@ -222,6 +274,9 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 
 	        // show error message, return to main screen.
 	    }
+	    else {
+	    	mRoom = room;
+	    }
 	}
 	
 	/**
@@ -234,6 +289,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 //        if (mRoomId != null) {
             gamesClient.leaveRoom(this, mRoomId);
             mRoomId = null;
+            mRoom = null;
 //            switchToScreen(R.id.screen_wait);
 //        } else {
 //            switchToMainScreen();
@@ -253,7 +309,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
         // prevent screen from sleeping during handshake
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         
-     // TODO go to game screen (maybe use onStartGameListener)
+        notifyListener();
     }
     
     private Builder makeBasicRoomConfigBuilder() {
@@ -282,7 +338,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	    // prevent screen from sleeping during handshake
 	    activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-	    // TODO go to game screen (maybe use onStartGameListener)
+	    notifyListener();
 	}
     
     public void handleAutoMatching(ArrayList<String> invitees) {
@@ -294,6 +350,21 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 
         // prevent screen from sleeping during handshake
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+    
+    /**
+     * Returns the currently active RoomId.
+     * null, if no room is active at the moment.
+     */
+    public String getRoomId() {
+    	return this.mRoomId;
+    }
+    
+    /**
+     * Returns the participantId of the remote player.
+     */
+    public String getParticipantId() {
+    	return participantId;
     }
 	
 }
