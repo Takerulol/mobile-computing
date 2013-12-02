@@ -77,6 +77,7 @@ public class RemoteGameLogic extends GameLogicImpl
 	 */
 	private void handlePlaceToken(byte[] message) {
 		//the second byte contains the row
+		Log.d("REMOTE_GAME_LOGIC", "starting handle process");
 		if (!currentToken.equals(localPlayer))
 		{
 			int row = ByteBuffer.wrap(message, 1, message.length - 1).getInt();
@@ -94,7 +95,8 @@ public class RemoteGameLogic extends GameLogicImpl
 	public void update(Observable observable, Object data) {
 		// A new message has been received.
 		// data contains the byte array including the header
-		
+		Log.d("REMOTE_GAME_LOGIC", "updating observer");
+		int i = 1;
 		byte[] message = (byte[]) data;
 		
 		processMessage(message);
