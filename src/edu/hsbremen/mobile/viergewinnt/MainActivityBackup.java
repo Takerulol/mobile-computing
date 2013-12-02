@@ -128,7 +128,7 @@ implements View.OnClickListener, OnInvitationReceivedListener {
 	private Builder makeBasicRoomConfigBuilder() {
 		networkManager = new NetworkManager(getGamesClient(), "0", "0");
 		RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(roomManager);
-        rtmConfigBuilder.setMessageReceivedListener(networkManager);
+        //rtmConfigBuilder.setMessageReceivedListener(networkManager);
         rtmConfigBuilder.setRoomStatusUpdateListener(roomManager);
         //rtmConfigBuilder.setRoomStatusUpdateListener(this);
         
