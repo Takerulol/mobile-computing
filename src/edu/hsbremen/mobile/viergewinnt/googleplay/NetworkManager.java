@@ -3,6 +3,8 @@ package edu.hsbremen.mobile.viergewinnt.googleplay;
 import java.nio.ByteBuffer;
 import java.util.Observable;
 
+import android.util.Log;
+
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
@@ -62,7 +64,11 @@ public class NetworkManager extends Observable
 	@Override
 	public void onRealTimeMessageReceived(RealTimeMessage rtm) {
 		
+		Log.d("NETWORK_MANAGER", "Message received.");
+		
 		byte[] message = rtm.getMessageData();
+		
+		Log.d("NETWORK_MANAGER", "byte length: " + message.length);
 		
 		//notify observers, that a new message has been received. 
 		
