@@ -37,9 +37,9 @@ public class NetworkManager extends Observable
 	 */
 	public void sendPackage(Header header, byte[] payload)
 	{
-		byte[] messageData = new byte[payload.length + 1];
-		ByteBuffer buffer = ByteBuffer.wrap(payload, 1, payload.length);
+		ByteBuffer buffer = ByteBuffer.wrap(payload, 1, payload.length + 1);
 		buffer.put(0, header.getByteValue());
+		byte[] messageData = buffer.array();
 		
 		client.sendReliableRealTimeMessage(null, messageData, roomId, participantId);
 	}
