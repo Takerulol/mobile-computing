@@ -19,7 +19,9 @@ import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
 import edu.hsbremen.mobile.viergewinnt.logic.Token;
 
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
@@ -28,7 +30,7 @@ import android.view.View;
 public class MainActivity extends BaseGameActivity 
 		implements MatchFragment.Listener, MainMenuFragment.Listener, RoomManager.Listener
     {
-
+	
 	private MainMenuFragment mainMenuFragment;
 	private MatchFragment matchFragment;
 
@@ -37,6 +39,12 @@ public class MainActivity extends BaseGameActivity
 
 	private RoomManager roomManager;
 	private InvitationManager invitationManager;
+	
+	@Override
+	protected void onPause() {
+		//this.roomManager.leaveRoom();
+		super.onPause();
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
