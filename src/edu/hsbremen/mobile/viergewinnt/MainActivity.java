@@ -246,4 +246,9 @@ public class MainActivity extends BaseGameActivity
 		}
 	}
 	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		//super.onSaveInstanceState(outState); //Bug API Level > 11
+	}
+	
 }
