@@ -42,7 +42,8 @@ public class MainActivity extends BaseGameActivity
 	
 	@Override
 	protected void onPause() {
-		//this.roomManager.leaveRoom();
+		if(this.roomManager != null)
+			this.roomManager.leaveRoom();
 		super.onPause();
 	}
 	
@@ -154,7 +155,8 @@ public class MainActivity extends BaseGameActivity
 
 	@Override
 	public void onWinnerFound(String msg) {
-		roomManager.leaveRoom(); //ensure to leave room
+		if(this.roomManager != null)	
+			roomManager.leaveRoom(); //ensure to leave room
 		switchToFragment(this.mainMenuFragment);
 		showAlert(msg);
 	}
