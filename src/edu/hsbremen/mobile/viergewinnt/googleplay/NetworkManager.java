@@ -16,7 +16,7 @@ import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceived
  * @author Thorsten
  *
  */
-public class NetworkManager implements RealTimeMessageReceivedListener {
+public class NetworkManager {
 	
 	public interface Listener {
 		void onMessageReceived(byte[] data);
@@ -72,7 +72,6 @@ public class NetworkManager implements RealTimeMessageReceivedListener {
 	/**
 	 * Message received handler.
 	 */
-	@Override
 	public void onRealTimeMessageReceived(RealTimeMessage rtm) {
 		
 		Log.d("NETWORK_MANAGER", "Message received.");

@@ -236,6 +236,7 @@ public class MainActivity extends BaseGameActivity
 			//initialize network manager and remote logic
 			NetworkManager manager = new NetworkManager
 					(getGamesClient(), roomManager.getRoomId(), roomManager.getParticipantId());
+			this.roomManager.setNetworkManager(manager);
 			logic = new RemoteGameLogic(localToken, manager);
 			
 			//start game
