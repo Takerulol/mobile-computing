@@ -154,6 +154,7 @@ public class MainActivity extends BaseGameActivity
 
 	@Override
 	public void onWinnerFound(String msg) {
+		roomManager.leaveRoom(); //ensure to leave room
 		switchToFragment(this.mainMenuFragment);
 		showAlert(msg);
 	}

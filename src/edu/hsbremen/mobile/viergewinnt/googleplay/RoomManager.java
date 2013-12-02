@@ -288,14 +288,14 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
         Log.d(TAG, "Leaving room.");
 //        mSecondsLeft = 0;
 //        stopKeepingScreenOn();
-//        if (mRoomId != null) {
+        if (mRoomId != null) {
             gamesClient.leaveRoom(this, mRoomId);
             mRoomId = null;
             mRoom = null;
 //            switchToScreen(R.id.screen_wait);
 //        } else {
 //            switchToMainScreen();
-//        }
+        }
     }
     
     /**
@@ -368,5 +368,6 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
     public String getParticipantId() {
     	return participantId;
     }
+    
 	
 }
