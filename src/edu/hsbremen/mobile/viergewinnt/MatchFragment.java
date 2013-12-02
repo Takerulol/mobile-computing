@@ -145,6 +145,7 @@ public class MatchFragment extends Fragment implements OnClickListener, GameLogi
 
 	public void setLogic(GameLogic logic) {
 		this.logic = logic;
+		logic.registerListener(this);
 	}
 
 	@Override
