@@ -26,7 +26,7 @@ import android.view.Menu;
 import android.view.View;
 
 public class MainActivity extends BaseGameActivity 
-		implements MatchFragment.Listener, MainMenuFragment.Listener, RoomManager.Listener,
+		implements MatchFragment.Listener, MainMenuFragment.Listener, RoomManager.Listener
     {
 
 	private MainMenuFragment mainMenuFragment;
@@ -245,6 +245,11 @@ public class MainActivity extends BaseGameActivity
 		else {
 			showAlert(getString(R.string.not_logged_in));
 		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		//super.onSaveInstanceState(outState); //Bug API Level > 11
 	}
 	
 }
