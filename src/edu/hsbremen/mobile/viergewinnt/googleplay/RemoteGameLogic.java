@@ -1,10 +1,13 @@
 package edu.hsbremen.mobile.viergewinnt.googleplay;
 
+import java.nio.ByteBuffer;
 import java.util.Observable;
 import java.util.Observer;
 
 import edu.hsbremen.mobile.viergewinnt.logic.GameLogicImpl;
 import edu.hsbremen.mobile.viergewinnt.logic.Token;
+import android.util.Log;
+
 import com.google.android.gms.games.GamesClient;
 
 /**
@@ -76,7 +79,8 @@ public class RemoteGameLogic extends GameLogicImpl
 		//the second byte contains the row
 		if (!currentToken.equals(localPlayer))
 		{
-			int row = (int) message[1];
+			int row = ByteBuffer.wrap(message, 1, message.length - 1).getInt();
+			Log.d("REMOTE_GAME_LOGIC", "Placing remote token in row " + row);
 			super.placeToken(row);
 		}
 		else
