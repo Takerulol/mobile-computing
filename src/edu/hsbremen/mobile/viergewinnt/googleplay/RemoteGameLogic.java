@@ -94,7 +94,6 @@ public class RemoteGameLogic extends GameLogicImpl
 		byte[] message = (byte[]) data;
 		
 		processMessage(message);
-		
 	}
 	
 	

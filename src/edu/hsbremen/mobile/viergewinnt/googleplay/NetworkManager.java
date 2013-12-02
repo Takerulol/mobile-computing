@@ -52,7 +52,8 @@ public class NetworkManager extends Observable
 	 */
 	public void sendPackage(Header header, int payload)
 	{
-		sendPackage(header,(byte) payload);
+		byte[] buffer = intToByte(payload);
+		sendPackage(header,buffer);
 	}
 
 	/**
@@ -69,6 +70,13 @@ public class NetworkManager extends Observable
 		super.notifyObservers(message);
 	}
 	
+	private byte[] intToByte(int value) {
+		ByteBuffer b = ByteBuffer.allocate(4);
+		b.putInt(value);
+
+		byte[] result = b.array();
+		return result;
+	}
 	
 	
 }
