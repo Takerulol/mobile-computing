@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-public class MatchFragment extends Fragment implements OnClickListener {
+public class MatchFragment extends Fragment implements OnClickListener, GameLogic.Listener {
 
 	public interface Listener {
 		void onWinnerFound(String msg);
@@ -118,7 +118,6 @@ public class MatchFragment extends Fragment implements OnClickListener {
 				@Override
 				public void onClick(View v) {
 					logic.placeToken(buttonNumber);
-					update();
 				}
 			});
 			row.addView(button);
@@ -146,6 +145,11 @@ public class MatchFragment extends Fragment implements OnClickListener {
 
 	public void setLogic(GameLogic logic) {
 		this.logic = logic;
+	}
+
+	@Override
+	public void onGamefieldUpdated() {
+		this.update();
 	}
 
 }

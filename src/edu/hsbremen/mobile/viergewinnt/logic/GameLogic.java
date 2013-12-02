@@ -2,6 +2,12 @@ package edu.hsbremen.mobile.viergewinnt.logic;
 
 public interface GameLogic {
 
+	public interface Listener {
+		void onGamefieldUpdated();
+	}
+	
+	void registerListener(Listener listener);
+	
 	/**
 	 * Starts a new game and sets the gamestate to RUNNING.
 	 * If a game is already in progress, it will be reseted.

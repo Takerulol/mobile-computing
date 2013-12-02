@@ -75,4 +75,9 @@ public class AchievementProxy implements GameLogic {
 		return getGamefieldClass();
 	}
 
+	@Override
+	public void registerListener(Listener listener) {
+		this.logic.registerListener(listener);
+	}
+
 }

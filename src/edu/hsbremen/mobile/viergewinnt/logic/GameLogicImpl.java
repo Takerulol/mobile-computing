@@ -6,6 +6,7 @@ public class GameLogicImpl implements GameLogic {
 	private Gamefield gamefield;
 	protected Token currentToken; 
 	private Token winner;
+	private Listener listener;
 	
 	static public final int WIDTH = 7;
 	static public final int HEIGHT = 6;
@@ -42,6 +43,7 @@ public class GameLogicImpl implements GameLogic {
 			checkWinner(currentToken);
 			checkFull();
 			changeToken();
+			this.listener.onGamefieldUpdated();
 		}
 		else
 		{
@@ -92,6 +94,12 @@ public class GameLogicImpl implements GameLogic {
 	@Override
 	public Gamefield getGamefieldClass() {
 		return gamefield;
+	}
+
+	@Override
+	public void registerListener(Listener listener) {
+		this.listener = listener;
+		
 	}
 
 }
