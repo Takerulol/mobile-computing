@@ -104,7 +104,7 @@ public class MainActivity extends BaseGameActivity
 		{
 			//provide achievement support
 			AchievementLogic al = new PlayAchievements(getGamesClient(),getBaseContext());
-			logic = new AchievementProxy(logic,al);
+			logic = new AchievementProxy(logic,al, Token.Red);
 		}
 		
 		this.matchFragment.setLogic(logic);
@@ -233,7 +233,6 @@ public class MainActivity extends BaseGameActivity
 			// TODO achievement logic depending on token
 			GameLogic logic = new GameLogicImpl();
 			AchievementLogic al = new PlayAchievements(getGamesClient(),getBaseContext());
-			logic = new AchievementProxy(logic,al);
 			
 			//Red or Blue token?
 			Token localToken = Token.None;
@@ -248,6 +247,9 @@ public class MainActivity extends BaseGameActivity
 					(getGamesClient(), roomManager.getRoomId(), roomManager.getParticipantId());
 			this.roomManager.setNetworkManager(manager);
 			logic = new RemoteGameLogic(localToken, manager);
+			
+			//enable achievements
+			logic = new AchievementProxy(logic,al, localToken);
 			
 			//start game
 			this.matchFragment.setLogic(logic);

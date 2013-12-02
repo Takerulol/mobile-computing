@@ -10,12 +10,13 @@ public class AchievementProxy implements GameLogic {
 	private GameLogic logic;
 	private AchievementLogic al;
 	
-	private final Token PLAYER = Token.Red;
+	private Token localPlayer = Token.None;
 	
-	public AchievementProxy(GameLogic logic, AchievementLogic al)
+	public AchievementProxy(GameLogic logic, AchievementLogic al, Token localPlayer)
 	{
 		this.logic = logic;
 		this.al = al;
+		this.localPlayer = localPlayer;
 	}
 	
 	@Override
@@ -34,19 +35,19 @@ public class AchievementProxy implements GameLogic {
 		
 		//check winner & four wins achievement
 		if (getGameState().equals(GameState.FINISHED) && 
-				getWinner().equals(PLAYER))
+				getWinner().equals(localPlayer))
 		{
 			al.unlockAchievement(Achievement.WINNER);
 			al.unlockAchievement(Achievement.FOUR_WINS);
 			
 			//check six in a row achievement
-			if (logic.getGamefieldClass().checkWinner(PLAYER, 6))
+			if (logic.getGamefieldClass().checkWinner(localPlayer, 6))
 			{
 				al.unlockAchievement(Achievement.SIX_IN_A_ROW);
 			}
 			
 			//check multikill achievement
-			if (logic.getGamefieldClass().checkWinningRows(PLAYER) >= 2)
+			if (logic.getGamefieldClass().checkWinningRows(localPlayer) >= 2)
 			{
 				al.unlockAchievement(Achievement.MULTIKILL);
 			}

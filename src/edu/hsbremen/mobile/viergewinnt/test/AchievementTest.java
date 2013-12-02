@@ -22,7 +22,7 @@ private AchievementLogic al;
 	public void setup()
 	{
 		al = new AchievementLogicMock();
-		logic = new AchievementProxy(new GameLogicImpl(), al);
+		logic = new AchievementProxy(new GameLogicImpl(), al, Token.Red);
 		logic.startGame();
 	}
 	
