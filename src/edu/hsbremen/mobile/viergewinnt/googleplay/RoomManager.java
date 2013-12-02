@@ -10,6 +10,8 @@ import android.view.WindowManager;
 
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Participant;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
 import com.google.android.gms.games.multiplayer.realtime.Room;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
@@ -25,7 +27,7 @@ import com.google.example.games.basegameutils.BaseGameActivity;
  * This class implements the RoomUpdateListener and RoomStatusUpdateListener interface.
  * It is used to encapsulate all code required to keep track of a room.
  */
-public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener {
+public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener, RealTimeMessageReceivedListener {
 
 	public interface Listener {
 		void onStartMultiplayerGame(boolean firstPlayer);
@@ -44,6 +46,7 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
 	private String mRoomId = null;
 	private String participantId = null;
 	private Room mRoom = null;
+	private NetworkManager networkManager = null;
 
 	private static final String TAG = "RoomManager";
 
@@ -315,9 +318,8 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
     }
     
     private Builder makeBasicRoomConfigBuilder() {
-		NetworkManager networkManager = new NetworkManager(gamesClient, "0", "0");
 		RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(this);
-        rtmConfigBuilder.setMessageReceivedListener(networkManager);
+        rtmConfigBuilder.setMessageReceivedListener(this);
         rtmConfigBuilder.setRoomStatusUpdateListener(this);
         
         return rtmConfigBuilder;
@@ -368,6 +370,23 @@ public class RoomManager implements RoomUpdateListener, RoomStatusUpdateListener
     public String getParticipantId() {
     	return participantId;
     }
+    
+    public NetworkManager getNetworkManager() {
+		return networkManager;
+	}
+
+	public void setNetworkManager(NetworkManager networkManager) {
+		this.networkManager = networkManager;
+	}
+
+	@Override
+	public void onRealTimeMessageReceived(RealTimeMessage arg0) {
+		if (this.networkManager != null) 
+		{
+			this.networkManager.onRealTimeMessageReceived(arg0);
+		}
+		
+	}
     
 	
 }
