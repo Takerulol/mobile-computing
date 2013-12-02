@@ -17,7 +17,7 @@ import com.google.android.gms.games.GamesClient;
  *
  */
 public class RemoteGameLogic extends GameLogicImpl 
-	implements Observer {
+	implements NetworkManager.Listener {
 
 	Token localPlayer;
 	NetworkManager networkManager;
@@ -28,8 +28,9 @@ public class RemoteGameLogic extends GameLogicImpl
 		this.localPlayer = localPlayer;
 		this.networkManager = networkManager;
 		
+		Log.d("REMOTE_GAME_LOGIC", "register listener for: " + this);
 		//observe network manager for new messages
-		networkManager.addObserver(this);
+		networkManager.registerListener(this);
 	}
 	
 
@@ -92,14 +93,11 @@ public class RemoteGameLogic extends GameLogicImpl
 
 
 	@Override
-	public void update(Observable observable, Object data) {
+	public void onMessageReceived(byte[] data) {
 		// A new message has been received.
 		// data contains the byte array including the header
 		Log.d("REMOTE_GAME_LOGIC", "updating observer");
-		int i = 1;
-		byte[] message = (byte[]) data;
-		
-		processMessage(message);
+		processMessage(data);
 	}
 	
 	

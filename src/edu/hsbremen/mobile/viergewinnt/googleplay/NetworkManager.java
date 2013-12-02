@@ -16,12 +16,16 @@ import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceived
  * @author Thorsten
  *
  */
-public class NetworkManager extends Observable 
-	implements RealTimeMessageReceivedListener {
+public class NetworkManager implements RealTimeMessageReceivedListener {
+	
+	public interface Listener {
+		void onMessageReceived(byte[] data);
+	}
 	
 	GamesClient client;
 	String roomId;
 	String participantId;
+	private Listener listener;
 	
 	public NetworkManager(GamesClient client, String roomId, String participantId)
 	{
@@ -30,7 +34,14 @@ public class NetworkManager extends Observable
 		this.participantId = participantId;
 	}
 	
+	public void registerListener(Listener listener) {
+		Log.d("NETWORK_MANAGER", "listener registered: " + listener);
+		this.listener = listener;
+	}
 	
+	public void unregisterListener() {
+		this.listener = null;
+	}
 
 	/**
 	 * Sends a package with the given header to the participant.
@@ -71,9 +82,12 @@ public class NetworkManager extends Observable
 		Log.d("NETWORK_MANAGER", "byte length: " + message.length);
 		
 		//notify observers, that a new message has been received. 
+		Log.d("NETWORK_MANAGER", "message: " + message);
+		Log.d("NETWORK_MANAGER", "listener: " + listener);
+		int i = 1;
 		
-		super.setChanged();
-		super.notifyObservers(message);
+		listener.onMessageReceived(message);
+		
 	}
 	
 	private byte[] intToByte(int value) {
